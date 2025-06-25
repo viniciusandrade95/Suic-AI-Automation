@@ -4,3 +4,4 @@ gunicorn==21.2.0
 Flask-SQLAlchemy
 Flask-Migrate
 python-dotenv
+flask_wtf
