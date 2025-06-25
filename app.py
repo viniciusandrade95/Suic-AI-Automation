@@ -17,23 +17,6 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
-@app.route('/init_admin')
-def init_admin():
-    # !!! SECURITY WARNING !!!
-    # Only use this ONCE then REMOVE this route from your code.
-    # Replace with real email and password
-    email = "admin@email.com"
-    password = "yourpassword"
-    
-    # Check if admin user already exists
-    from models import User, db  # Ensure imported at top or here
-    if User.query.filter_by(email=email).first():
-        return "Admin user already exists! Remove this route."
-    
-    admin = User(email=email, password_hash=generate_password_hash(password))
-    db.session.add(admin)
-    db.session.commit()
-    return f"Admin user '{email}' created successfully. Now REMOVE this route!"
 
 # Remember to REMOVE or COMMENT OUT this route after running ONCE!
 
