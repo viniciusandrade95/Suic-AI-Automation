@@ -1,6 +1,7 @@
 # app.py
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 app = Flask(__name__)
 # SQLite uses a URI that starts with 'sqlite:///path_to_db_file'
