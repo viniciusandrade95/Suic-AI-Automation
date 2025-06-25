@@ -12,8 +12,9 @@ app.secret_key = 'replace_with_a_random_secret'
 
 db.init_app(app)
 
-@app.before_first_request
-def create_tables():
+# Fixed: @app.before_first_request is deprecated in Flask 2.2+
+# Use app context instead
+with app.app_context():
     db.create_all()
 
 @app.route('/', methods=['GET'])
@@ -46,6 +47,12 @@ def admin_dashboard():
     if 'user_id' not in session:
         return redirect(url_for('admin_login'))
     user = User.query.get(session['user_id'])
+    
+    # Fixed: Added safety check for user existence
+    if not user:
+        session.pop('user_id', None)
+        return redirect(url_for('admin_login'))
+    
     biz = user.businesses[0] if user.businesses else None
 
     if request.method == "POST" and biz:
@@ -66,6 +73,12 @@ def add_service():
     if 'user_id' not in session:
         return redirect(url_for('admin_login'))
     user = User.query.get(session['user_id'])
+    
+    # Fixed: Added safety checks
+    if not user or not user.businesses:
+        flash("No business found for this user.")
+        return redirect(url_for('admin_dashboard'))
+    
     biz = user.businesses[0]
     if request.method == "POST":
         s = Service(
@@ -102,3 +115,6 @@ def chat(biz_id):
         bot_message = f"{biz.welcome_message or 'Olá!'} {client.name}, como posso ajudar com nossos serviços?"
         return render_template('chat.html', business=biz, client_name=client.name, chat=[("you", user_message), ("bot", bot_message)])
     return render_template('chat.html', business=biz, client_name=None, chat=None)
+
+if __name__ == '__main__':
+    app.run(debug=True)
