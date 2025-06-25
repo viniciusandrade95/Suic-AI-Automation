@@ -1,67 +1,104 @@
-# app.py
-from flask import Flask
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
+from models import db, User, Business, Service, Client
+from forms import AdminLoginForm, BusinessForm, ServiceForm
 from datetime import datetime
 
 app = Flask(__name__)
-# SQLite uses a URI that starts with 'sqlite:///path_to_db_file'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'   # File named app.db in your project folder
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.secret_key = 'replace_with_a_random_secret'
 
-db = SQLAlchemy(app)
+db.init_app(app)
 
-# --- Models ---
+@app.before_first_request
+def create_tables():
+    db.create_all()
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(255), unique=True, nullable=False)
-    password_hash = db.Column(db.String(255), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    businesses = db.relationship('Business', backref='owner', lazy=True)
+@app.route('/', methods=['GET'])
+def home():
+    # List all businesses for demo—click to chat
+    studios = Business.query.all()
+    return render_template('home.html', studios=studios)
 
-class Business(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    name = db.Column(db.String(255), nullable=False)
-    whatsapp = db.Column(db.String(30))
-    phone = db.Column(db.String(30))
-    address = db.Column(db.String(255))
-    hours = db.Column(db.String(255))
-    welcome_message = db.Column(db.Text)
-    bot_persona = db.Column(db.Text)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    services = db.relationship('Service', backref='business', lazy=True)
-    clients = db.relationship('Client', backref='business', lazy=True)
+# ---- ADMIN AREA ----
+@app.route('/admin/login', methods=['GET', 'POST'])
+def admin_login():
+    form = AdminLoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and check_password_hash(user.password_hash, form.password.data):
+            session['user_id'] = user.id
+            return redirect(url_for('admin_dashboard'))
+        else:
+            flash("Invalid login.")
+    return render_template('admin_login.html', form=form)
 
-class Service(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    business_id = db.Column(db.Integer, db.ForeignKey('business.id'), nullable=False)
-    name = db.Column(db.String(255), nullable=False)
-    price = db.Column(db.String(50))
-    duration = db.Column(db.String(30))
+@app.route('/admin/logout')
+def admin_logout():
+    session.pop('user_id', None)
+    flash("Logged out!")
+    return redirect(url_for('admin_login'))
 
-class Client(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    business_id = db.Column(db.Integer, db.ForeignKey('business.id'), nullable=False)
-    name = db.Column(db.String(255))
-    contact = db.Column(db.String(255))
-    last_seen = db.Column(db.DateTime)
-    notes = db.Column(db.Text)
+@app.route('/admin/dashboard', methods=['GET', 'POST'])
+def admin_dashboard():
+    if 'user_id' not in session:
+        return redirect(url_for('admin_login'))
+    user = User.query.get(session['user_id'])
+    biz = user.businesses[0] if user.businesses else None
 
-# --- Startup ---
+    if request.method == "POST" and biz:
+        # Update business info
+        biz.name = request.form.get("name")
+        biz.address = request.form.get("address")
+        biz.phone = request.form.get("phone")
+        biz.whatsapp = request.form.get("whatsapp")
+        biz.hours = request.form.get("hours")
+        biz.welcome_message = request.form.get("welcome_message")
+        db.session.commit()
+        flash("Info updated!")
 
-@app.route('/')
-def hello_render():
-    """
-    Renders a simple 'Hello, Render!' message when the root URL is accessed.
-    """
-    return "Hello, Render!"
+    return render_template('admin_dashboard.html', business=biz, user=user)
 
-if __name__ == '__main__':
-    # This block is for local development only.
-    # Render.com will use Gunicorn to run the app in production.
-    with app.app_context():
-        db.create_all()  # This line creates app.db and all tables if not exists
-    print("Database created (if not exists). You can now start building features!")
-    #app.run(debug=True)
-    app.run(debug=True, host='0.0.0.0', port=5000)
+@app.route('/admin/services/add', methods=['GET', 'POST'])
+def add_service():
+    if 'user_id' not in session:
+        return redirect(url_for('admin_login'))
+    user = User.query.get(session['user_id'])
+    biz = user.businesses[0]
+    if request.method == "POST":
+        s = Service(
+            business_id=biz.id,
+            name=request.form['name'],
+            price=request.form['price'],
+            duration=request.form['duration'])
+        db.session.add(s)
+        db.session.commit()
+        flash("Service added!")
+        return redirect(url_for('admin_dashboard'))
+    return render_template('add_service.html')
+
+# ---- CLIENT/CHAT AREA ----
+@app.route('/chat/<int:biz_id>', methods=['GET', 'POST'])
+def chat(biz_id):
+    biz = Business.query.get_or_404(biz_id)
+    if request.method == "POST":
+        # Simple "client memory": ask for name first time
+        client_name = request.form['name']
+        client = Client.query.filter_by(business_id=biz_id, name=client_name).first()
+        if not client:
+            client = Client(
+                business_id=biz_id,
+                name=client_name,
+                last_seen=datetime.utcnow())
+            db.session.add(client)
+            db.session.commit()
+        else:
+            client.last_seen = datetime.utcnow()
+            db.session.commit()
+        # For MVP: simple echo, you can replace this with AI logic
+        user_message = request.form['message']
+        bot_message = f"{biz.welcome_message or 'Olá!'} {client.name}, como posso ajudar com nossos serviços?"
+        return render_template('chat.html', business=biz, client_name=client.name, chat=[("you", user_message), ("bot", bot_message)])
+    return render_template('chat.html', business=biz, client_name=None, chat=None)
