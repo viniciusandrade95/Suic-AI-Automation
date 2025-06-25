@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Your Business Dashboard</h2>
+{% if business %}
+  <form method="post">
+    Name: <input type="text" name="name" value="{{ business.name }}"><br>
+    Address: <input type="text" name="address" value="{{ business.address }}"><br>
+    Phone: <input type="text" name="phone" value="{{ business.phone }}"><br>
+    WhatsApp: <input type="text" name="whatsapp" value="{{ business.whatsapp }}"><br>
+    Hours: <input type="text" name="hours" value="{{ business.hours }}"><br>
+    Welcome Msg: <textarea name="welcome_message">{{ business.welcome_message }}</textarea><br>
+    <input type="submit" value="Save">
+  </form>
+  <a href="{{ url_for('add_service') }}">Add New Service</a><br>
+  <h3>Services:</h3>
+  <ul>
+    {% for s in business.services %}
+      <li>{{ s.name }}: {{ s.price }} / {{ s.duration }}</li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No business found. Contact support!</p>
+{% endif %}
+<a href="{{ url_for('admin_logout') }}">Log Out</a>
+{% endblock %}
