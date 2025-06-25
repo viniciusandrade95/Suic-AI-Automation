@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Chat with {{ business.name }}</h2>
+{% if not client_name %}
+<form method="post">
+    Your Name: <input type="text" name="name"><br>
+    Your Message: <input type="text" name="message"><br>
+    <input type="submit" value="Send">
+</form>
+{% else %}
+<p><b>You:</b> {{ chat[0][1] }}</p>
+<p><b>Bot:</b> {{ chat[1][1] }}</p>
+<form method="post">
+    <input type="hidden" name="name" value="{{ client_name }}">
+    Your Message: <input type="text" name="message"><br>
+    <input type="submit" value="Send">
+</form>
+{% endif %}
+<a href="{{ url_for('home') }}">Back</a>
+{% endblock %}
