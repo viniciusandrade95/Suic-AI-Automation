@@ -5,3 +5,4 @@ Flask-SQLAlchemy
 Flask-Migrate
 python-dotenv
 flask_wtf
+werkzeug.security
