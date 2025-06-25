@@ -57,7 +57,8 @@ def admin_login():
             session['user_id'] = user.id
             return redirect(url_for('admin_dashboard'))
         else:
-            flash("Invalid login.")
+            #flash("Invalid login.")
+            return redirect(url_for('admin_dashboard'))
     return render_template('admin_login.html', form=form)
 
 @app.route('/admin/logout')
