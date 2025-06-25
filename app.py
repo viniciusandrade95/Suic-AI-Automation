@@ -1,7 +1,13 @@
 # app.py
 from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+# SQLite uses a URI that starts with 'sqlite:///path_to_db_file'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'   # File named app.db in your project folder
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
 
 @app.route('/')
 def hello_render():
