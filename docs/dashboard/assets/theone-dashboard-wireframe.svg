@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="20%" r="80%">
+      <stop offset="0" stop-color="#16384d"/>
+      <stop offset="0.45" stop-color="#071520"/>
+      <stop offset="1" stop-color="#02070b"/>
+    </radialGradient>
+    <radialGradient id="lava1" cx="25%" cy="20%" r="30%"><stop offset="0" stop-color="#70d6ff" stop-opacity="0.55"/><stop offset="1" stop-color="#70d6ff" stop-opacity="0"/></radialGradient>
+    <radialGradient id="lava2" cx="75%" cy="25%" r="32%"><stop offset="0" stop-color="#ff8a5c" stop-opacity="0.45"/><stop offset="1" stop-color="#ff8a5c" stop-opacity="0"/></radialGradient>
+    <radialGradient id="lava3" cx="65%" cy="75%" r="34%"><stop offset="0" stop-color="#7cffd4" stop-opacity="0.32"/><stop offset="1" stop-color="#7cffd4" stop-opacity="0"/></radialGradient>
+    <filter id="blur"><feGaussianBlur stdDeviation="22"/></filter>
+    <style>
+      .panel{fill:rgba(8,23,33,.78);stroke:rgba(194,235,255,.22);stroke-width:1.5}
+      .line{stroke:rgba(194,235,255,.22);stroke-width:1.5}
+      .title{font:800 28px Inter,Arial,sans-serif;fill:#eef8ff;letter-spacing:2px}
+      .h{font:800 22px Inter,Arial,sans-serif;fill:#eef8ff;letter-spacing:1.4px}
+      .small{font:500 18px Inter,Arial,sans-serif;fill:#91b4c4}
+      .tiny{font:600 14px Inter,Arial,sans-serif;fill:#a8c5d0}
+      .hero{font:900 64px Inter,Arial,sans-serif;fill:#ffffff;letter-spacing:-3px}
+      .hero2{fill:#ffba9e}
+      .num{font:800 18px Inter,Arial,sans-serif;fill:#caf6ff}
+      .label{font:700 17px Inter,Arial,sans-serif;fill:#eef8ff}
+      .muted{font:500 14px Inter,Arial,sans-serif;fill:#8fb0bf}
+    </style>
+  </defs>
+  <rect width="1600" height="1000" fill="url(#bg)"/>
+  <g filter="url(#blur)"><rect width="1600" height="1000" fill="url(#lava1)"/><rect width="1600" height="1000" fill="url(#lava2)"/><rect width="1600" height="1000" fill="url(#lava3)"/></g>
+  <rect x="25" y="25" width="1550" height="92" rx="26" class="panel"/>
+  <circle cx="72" cy="71" r="24" fill="#70d6ff" opacity=".85"/>
+  <text x="110" y="65" class="title">THEONE LIVING COCKPIT</text>
+  <text x="110" y="91" class="small">Semana 01 · construção local antes da VPS · uma decisão principal por ecrã</text>
+  <rect x="870" y="54" width="260" height="14" rx="7" fill="rgba(255,255,255,.09)" stroke="rgba(255,255,255,.12)"/>
+  <rect x="870" y="54" width="64" height="14" rx="7" fill="#70d6ff"/>
+  <text x="870" y="93" class="tiny">Progresso: 0/7 gigantes com evidência</text>
+  <rect x="1220" y="46" width="300" height="42" rx="21" fill="rgba(255,209,102,.10)" stroke="rgba(255,209,102,.35)"/>
+  <text x="1260" y="73" class="tiny" fill="#ffe8a3">🟡 Em construção · foco local</text>
+
+  <rect x="25" y="140" width="360" height="690" rx="26" class="panel"/>
+  <text x="50" y="178" class="h">7 gigantes desta semana</text>
+  <text x="50" y="204" class="small">não é lista infinita</text>
+  <g transform="translate(50,230)">
+    <g><rect width="310" height="70" rx="16" fill="rgba(255,255,255,.055)" stroke="rgba(255,255,255,.12)"/><circle cx="28" cy="35" r="18" fill="rgba(112,214,255,.14)" stroke="rgba(112,214,255,.3)"/><text x="23" y="41" class="num">1</text><text x="58" y="29" class="label">🧱 Base local + repo truth</text><text x="58" y="51" class="muted">estrutura, Docker/dev, docs</text></g>
+    <g transform="translate(0,82)"><rect width="310" height="70" rx="16" fill="rgba(255,255,255,.055)" stroke="rgba(255,255,255,.12)"/><circle cx="28" cy="35" r="18" fill="rgba(112,214,255,.14)" stroke="rgba(112,214,255,.3)"/><text x="23" y="41" class="num">2</text><text x="58" y="29" class="label">🧠 Signal Engine</text><text x="58" y="51" class="muted">agora, bloqueado, risco</text></g>
+    <g transform="translate(0,164)"><rect width="310" height="70" rx="16" fill="rgba(255,255,255,.055)" stroke="rgba(255,255,255,.12)"/><circle cx="28" cy="35" r="18" fill="rgba(112,214,255,.14)" stroke="rgba(112,214,255,.3)"/><text x="23" y="41" class="num">3</text><text x="58" y="29" class="label">👤 Tenant/Auth mockável</text><text x="58" y="51" class="muted">token, staff, fronteira</text></g>
+    <g transform="translate(0,246)"><rect width="310" height="70" rx="16" fill="rgba(255,255,255,.055)" stroke="rgba(255,255,255,.12)"/><circle cx="28" cy="35" r="18" fill="rgba(112,214,255,.14)" stroke="rgba(112,214,255,.3)"/><text x="23" y="41" class="num">4</text><text x="58" y="29" class="label">🗂️ CRM seed mínimo</text><text x="58" y="51" class="muted">serviço, local, cliente</text></g>
+    <g transform="translate(0,328)"><rect width="310" height="70" rx="16" fill="rgba(255,255,255,.055)" stroke="rgba(255,255,255,.12)"/><circle cx="28" cy="35" r="18" fill="rgba(112,214,255,.14)" stroke="rgba(112,214,255,.3)"/><text x="23" y="41" class="num">5</text><text x="58" y="29" class="label">📅 Appointment/prebooking</text><text x="58" y="51" class="muted">criar e aparecer no cockpit</text></g>
+    <g transform="translate(0,410)"><rect width="310" height="70" rx="16" fill="rgba(255,255,255,.055)" stroke="rgba(255,255,255,.12)"/><circle cx="28" cy="35" r="18" fill="rgba(112,214,255,.14)" stroke="rgba(112,214,255,.3)"/><text x="23" y="41" class="num">6</text><text x="58" y="29" class="label">🌍 Link público /book/slug</text><text x="58" y="51" class="muted">serviço → hora → confirmar</text></g>
+    <g transform="translate(0,492)"><rect width="310" height="70" rx="16" fill="rgba(255,255,255,.055)" stroke="rgba(255,255,255,.12)"/><circle cx="28" cy="35" r="18" fill="rgba(112,214,255,.14)" stroke="rgba(112,214,255,.3)"/><text x="23" y="41" class="num">7</text><text x="58" y="29" class="label">🤖 Chatbot + UI viva</text><text x="58" y="51" class="muted">explica, filtra, muda vista</text></g>
+  </g>
+
+  <rect x="405" y="140" width="760" height="490" rx="30" class="panel"/>
+  <text x="435" y="184" class="h" fill="#ffe8da">🔥 AGORA — BROADWAY SIGNAL</text>
+  <text x="1015" y="184" class="tiny" fill="#ffcab5">1 decisão principal</text>
+  <text x="470" y="328" class="small">não construir caixas · construir cockpit</text>
+  <text x="470" y="410" class="hero">montar o</text>
+  <text x="470" y="485" class="hero hero2">protótipo local</text>
+  <text x="470" y="560" class="hero">com 7 gigantes</text>
+  <rect x="435" y="650" width="235" height="140" rx="22" class="panel"/><text x="458" y="686" class="label">🧠 Motivo</text><text x="458" y="718" class="muted">sem ecrã vivo local, a ideia</text><text x="458" y="740" class="muted">fica abstrata.</text>
+  <rect x="690" y="650" width="235" height="140" rx="22" class="panel"/><text x="713" y="686" class="label">🔓 Desbloqueia</text><text x="713" y="718" class="muted">design real, chatbot, signal</text><text x="713" y="740" class="muted">engine e deploy futuro.</text>
+  <rect x="945" y="650" width="220" height="140" rx="22" class="panel"/><text x="968" y="686" class="label">⚠️ Se ignorar</text><text x="968" y="718" class="muted">vira dashboard genérico</text><text x="968" y="740" class="muted">cheio de cards.</text>
+
+  <rect x="1185" y="140" width="390" height="440" rx="26" class="panel"/>
+  <text x="1210" y="178" class="h">🤖 Chatbot do cockpit</text>
+  <rect x="1210" y="210" width="260" height="54" rx="18" fill="rgba(255,255,255,.065)" stroke="rgba(255,255,255,.12)"/><text x="1230" y="242" class="muted">O que devo fazer agora?</text>
+  <rect x="1210" y="280" width="330" height="82" rx="18" fill="rgba(112,214,255,.10)" stroke="rgba(112,214,255,.24)"/><text x="1230" y="312" class="muted">Foco: protótipo local. Mostro</text><text x="1230" y="334" class="muted">7 gigantes, 3 bloqueios e 1 ação.</text>
+  <rect x="1210" y="382" width="310" height="54" rx="18" fill="rgba(255,255,255,.065)" stroke="rgba(255,255,255,.12)"/><text x="1230" y="415" class="muted">Mostra só o que destrava booking.</text>
+  <rect x="1210" y="454" width="330" height="82" rx="18" fill="rgba(112,214,255,.10)" stroke="rgba(112,214,255,.24)"/><text x="1230" y="486" class="muted">Tenant/Auth → CRM seed →</text><text x="1230" y="508" class="muted">Appointment → /book/slug.</text>
+
+  <rect x="1185" y="600" width="390" height="230" rx="26" class="panel"/>
+  <text x="1210" y="638" class="h">Avatar / estado vivo</text>
+  <circle cx="1380" cy="725" r="68" fill="#7cffd4" opacity=".75" stroke="rgba(255,255,255,.35)"/>
+  <circle cx="1355" cy="710" r="9" fill="#021117"/><circle cx="1405" cy="710" r="9" fill="#021117"/>
+  <path d="M1360 748 Q1380 765 1400 748" fill="none" stroke="#021117" stroke-width="5" stroke-linecap="round"/>
+
+  <rect x="25" y="855" width="1550" height="120" rx="26" class="panel"/>
+  <text x="50" y="895" class="h">Sequência da semana</text>
+  <g transform="translate(330,875)">
+    <g><rect width="150" height="70" rx="16" fill="rgba(255,255,255,.055)" stroke="rgba(255,255,255,.12)"/><text x="15" y="28" class="tiny">Dia 1</text><text x="15" y="52" class="muted">base + layout</text></g>
+    <g transform="translate(165,0)"><rect width="150" height="70" rx="16" fill="rgba(255,255,255,.055)" stroke="rgba(255,255,255,.12)"/><text x="15" y="28" class="tiny">Dia 2</text><text x="15" y="52" class="muted">signal engine</text></g>
+    <g transform="translate(330,0)"><rect width="150" height="70" rx="16" fill="rgba(255,255,255,.055)" stroke="rgba(255,255,255,.12)"/><text x="15" y="28" class="tiny">Dia 3</text><text x="15" y="52" class="muted">tenant/auth</text></g>
+    <g transform="translate(495,0)"><rect width="150" height="70" rx="16" fill="rgba(255,255,255,.055)" stroke="rgba(255,255,255,.12)"/><text x="15" y="28" class="tiny">Dia 4</text><text x="15" y="52" class="muted">CRM seed</text></g>
+    <g transform="translate(660,0)"><rect width="150" height="70" rx="16" fill="rgba(255,255,255,.055)" stroke="rgba(255,255,255,.12)"/><text x="15" y="28" class="tiny">Dia 5</text><text x="15" y="52" class="muted">prebooking</text></g>
+    <g transform="translate(825,0)"><rect width="150" height="70" rx="16" fill="rgba(255,255,255,.055)" stroke="rgba(255,255,255,.12)"/><text x="15" y="28" class="tiny">Dia 6</text><text x="15" y="52" class="muted">chat controls</text></g>
+    <g transform="translate(990,0)"><rect width="150" height="70" rx="16" fill="rgba(255,255,255,.055)" stroke="rgba(255,255,255,.12)"/><text x="15" y="28" class="tiny">Dia 7</text><text x="15" y="52" class="muted">touch + VPS</text></g>
+  </g>
+</svg>

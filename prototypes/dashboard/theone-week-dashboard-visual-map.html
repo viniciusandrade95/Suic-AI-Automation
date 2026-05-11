@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TheOne Control Room — Mapa Visual da Semana</title>
+  <style>
+    :root{
+      --ink:#111820;
+      --graphite:#1D252C;
+      --bone:#F3F0E8;
+      --canvas:#EDEAE1;
+      --line:rgba(243,240,232,.18);
+      --line-dark:rgba(17,24,32,.18);
+      --teal:#4FBDB5;
+      --deep-teal:#1F6F6A;
+      --sand:#C6B896;
+      --fire:#E87545;
+      --warn:#D6A44C;
+      --danger:#D65D5D;
+      --violet:#8E7DE8;
+      --good:#77B98A;
+      --blue:#65A6E8;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ margin:0; min-height:100%; background:var(--ink); font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color:var(--bone); }
+    body{ overflow-x:hidden; }
+
+    .lava{
+      position:fixed; inset:0; overflow:hidden; pointer-events:none; background:radial-gradient(circle at 20% 10%, rgba(79,189,181,.16), transparent 28%), linear-gradient(135deg,#111820 0%, #182127 55%, #0d1217 100%);
+    }
+    .blob{ position:absolute; width:42vw; height:42vw; min-width:420px; min-height:420px; border-radius:45% 55% 62% 38%; filter:blur(36px); opacity:.34; mix-blend-mode:screen; animation:float 22s ease-in-out infinite alternate; }
+    .b1{ left:-13vw; top:2vh; background:var(--teal); animation-duration:25s; }
+    .b2{ right:-18vw; top:18vh; background:var(--fire); animation-duration:30s; animation-delay:-8s; }
+    .b3{ left:42vw; bottom:-22vh; background:var(--violet); animation-duration:34s; animation-delay:-13s; }
+    .b4{ left:18vw; top:42vh; background:var(--sand); width:28vw; height:28vw; opacity:.20; animation-duration:28s; animation-delay:-4s; }
+    @keyframes float{
+      0%{ transform:translate3d(0,0,0) scale(1) rotate(0deg); border-radius:45% 55% 62% 38%; }
+      50%{ transform:translate3d(4vw,-5vh,0) scale(1.08) rotate(23deg); border-radius:58% 42% 39% 61%; }
+      100%{ transform:translate3d(-5vw,6vh,0) scale(.96) rotate(-17deg); border-radius:38% 62% 54% 46%; }
+    }
+
+    .wrap{ position:relative; z-index:1; padding:28px; }
+    .dashboard{ width:min(1680px, calc(100vw - 56px)); margin:0 auto; border:1px solid var(--line); border-radius:30px; background:rgba(17,24,32,.72); backdrop-filter:blur(24px); box-shadow:0 30px 90px rgba(0,0,0,.42); overflow:hidden; }
+
+    .topbar{ height:86px; display:grid; grid-template-columns:1fr auto; gap:18px; align-items:center; padding:0 28px; border-bottom:1px solid var(--line); }
+    .brand{ display:flex; gap:18px; align-items:center; }
+    .mark{ width:44px; height:44px; border:1px solid rgba(243,240,232,.45); display:grid; place-items:center; border-radius:13px; color:var(--teal); font-weight:800; letter-spacing:-.06em; }
+    .title{ line-height:1.05; }
+    .title h1{ margin:0; font-size:25px; letter-spacing:-.04em; font-weight:750; }
+    .title p{ margin:7px 0 0; color:rgba(243,240,232,.62); font-size:13px; }
+    .chips{ display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
+    .chip{ border:1px solid var(--line); border-radius:999px; padding:9px 12px; color:rgba(243,240,232,.78); font-size:12px; letter-spacing:.01em; background:rgba(243,240,232,.05); }
+    .chip strong{ color:var(--bone); font-weight:650; }
+
+    .grid{ display:grid; grid-template-columns:300px 1fr 360px; gap:0; min-height:870px; }
+    .side{ border-right:1px solid var(--line); padding:24px; background:rgba(13,18,23,.45); }
+    .rail{ border-left:1px solid var(--line); padding:24px; background:rgba(13,18,23,.36); }
+    .main{ padding:24px; }
+
+    .section-label{ font-size:11px; color:rgba(243,240,232,.50); text-transform:uppercase; letter-spacing:.14em; margin-bottom:12px; font-weight:700; }
+    .mission{ padding:18px; border:1px solid var(--line); border-radius:22px; background:linear-gradient(180deg, rgba(243,240,232,.08), rgba(243,240,232,.03)); margin-bottom:18px; }
+    .mission .small{ font-size:12px; color:rgba(243,240,232,.58); margin-bottom:8px; }
+    .mission h2{ margin:0; font-size:28px; line-height:1; letter-spacing:-.05em; }
+    .mission p{ margin:12px 0 0; color:rgba(243,240,232,.72); line-height:1.35; font-size:13px; }
+
+    .giants{ display:flex; flex-direction:column; gap:10px; }
+    .giant{ border:1px solid var(--line); border-radius:18px; padding:12px; background:rgba(243,240,232,.045); display:grid; grid-template-columns:30px 1fr; gap:10px; min-height:76px; }
+    .num{ width:28px; height:28px; border-radius:9px; border:1px solid rgba(243,240,232,.23); display:grid; place-items:center; color:var(--bone); font-size:12px; font-weight:800; }
+    .giant h3{ margin:0 0 5px; font-size:13px; letter-spacing:-.02em; }
+    .giant p{ margin:0; color:rgba(243,240,232,.58); font-size:11px; line-height:1.28; }
+    .tag{ display:inline-flex; align-items:center; gap:5px; margin-top:8px; border-radius:999px; padding:4px 7px; border:1px solid rgba(243,240,232,.16); font-size:10px; color:rgba(243,240,232,.68); }
+    .dot{ width:7px; height:7px; border-radius:50%; background:var(--teal); }
+    .fire .dot{ background:var(--fire); } .warn .dot{ background:var(--warn); } .danger .dot{ background:var(--danger); } .blue .dot{ background:var(--blue); } .violet .dot{ background:var(--violet); } .good .dot{ background:var(--good); }
+
+    .hero{ position:relative; overflow:hidden; border:1px solid rgba(232,117,69,.50); border-radius:28px; background:linear-gradient(135deg, rgba(232,117,69,.24), rgba(79,189,181,.10) 52%, rgba(243,240,232,.06)); padding:28px; min-height:260px; display:grid; grid-template-columns:1.1fr .9fr; gap:24px; margin-bottom:18px; }
+    .hero:after{ content:""; position:absolute; right:-120px; top:-120px; width:330px; height:330px; border-radius:50%; background:radial-gradient(circle, rgba(232,117,69,.33), transparent 68%); filter:blur(8px); }
+    .hero h2{ margin:0; font-size:13px; letter-spacing:.16em; text-transform:uppercase; color:rgba(243,240,232,.68); }
+    .hero .big{ margin:12px 0 12px; font-size:48px; line-height:.98; letter-spacing:-.07em; font-weight:820; max-width:620px; }
+    .hero .why{ color:rgba(243,240,232,.74); line-height:1.45; font-size:15px; max-width:620px; }
+    .unlock{ display:grid; gap:10px; align-content:start; z-index:1; }
+    .unlock-card{ border:1px solid var(--line); border-radius:18px; padding:14px; background:rgba(17,24,32,.42); }
+    .unlock-card b{ display:block; font-size:12px; color:var(--bone); margin-bottom:7px; }
+    .unlock-card span{ color:rgba(243,240,232,.62); font-size:12px; line-height:1.32; }
+
+    .signal-strip{ height:58px; display:flex; align-items:center; overflow:hidden; border:1px solid var(--line); border-radius:20px; background:rgba(17,24,32,.62); margin-bottom:18px; }
+    .marquee{ white-space:nowrap; animation:marquee 28s linear infinite; color:rgba(243,240,232,.86); font-weight:700; letter-spacing:.02em; }
+    .marquee span{ padding:0 38px; }
+    @keyframes marquee{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
+
+    .matrix{ display:grid; grid-template-columns:repeat(7, minmax(118px, 1fr)); gap:12px; margin-bottom:18px; }
+    .lane{ min-height:178px; border:1px solid var(--line); border-radius:20px; padding:13px; background:rgba(243,240,232,.045); position:relative; overflow:hidden; }
+    .lane:before{ content:""; position:absolute; left:0; right:0; top:0; height:4px; background:var(--teal); opacity:.88; }
+    .lane.fire:before{ background:var(--fire); } .lane.warn:before{ background:var(--warn); } .lane.blue:before{ background:var(--blue); } .lane.violet:before{ background:var(--violet); } .lane.good:before{ background:var(--good); } .lane.danger:before{ background:var(--danger); }
+    .lane .k{ font-size:11px; color:rgba(243,240,232,.48); margin-bottom:9px; }
+    .lane h3{ margin:0; font-size:14px; letter-spacing:-.035em; line-height:1.08; min-height:34px; }
+    .lane p{ margin:11px 0; color:rgba(243,240,232,.58); line-height:1.28; font-size:11.5px; }
+    .bar{ height:8px; border-radius:999px; background:rgba(243,240,232,.12); overflow:hidden; margin-top:10px; }
+    .bar i{ display:block; height:100%; border-radius:999px; background:var(--teal); }
+    .lane.fire .bar i{ background:var(--fire); } .lane.warn .bar i{ background:var(--warn); } .lane.blue .bar i{ background:var(--blue); } .lane.violet .bar i{ background:var(--violet); } .lane.good .bar i{ background:var(--good); } .lane.danger .bar i{ background:var(--danger); }
+
+    .lower{ display:grid; grid-template-columns:1.1fr .9fr; gap:18px; }
+    .module{ border:1px solid var(--line); border-radius:24px; padding:18px; background:rgba(243,240,232,.045); }
+    .module h3{ margin:0 0 12px; font-size:16px; letter-spacing:-.035em; }
+    .timeline{ display:grid; gap:9px; }
+    .step{ display:grid; grid-template-columns:82px 1fr; gap:12px; align-items:start; border-top:1px solid rgba(243,240,232,.10); padding-top:10px; }
+    .step:first-child{ border-top:0; padding-top:0; }
+    .day{ font-size:11px; color:rgba(243,240,232,.48); text-transform:uppercase; letter-spacing:.1em; }
+    .step b{ font-size:13px; }
+    .step p{ margin:4px 0 0; font-size:11.5px; color:rgba(243,240,232,.58); line-height:1.35; }
+
+    .touchgrid{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+    .touch{ min-height:70px; border:1px solid var(--line); border-radius:16px; padding:12px; display:flex; flex-direction:column; justify-content:space-between; background:rgba(17,24,32,.30); }
+    .touch b{ font-size:12px; }
+    .touch span{ font-size:10.5px; color:rgba(243,240,232,.54); }
+
+    .chat{ min-height:300px; border:1px solid rgba(79,189,181,.38); border-radius:24px; padding:16px; background:rgba(79,189,181,.06); margin-bottom:18px; }
+    .chat h3{ margin:0 0 13px; font-size:16px; letter-spacing:-.035em; }
+    .bubble{ border-radius:16px; padding:11px 12px; margin-bottom:10px; line-height:1.35; font-size:12px; max-width:94%; }
+    .user{ background:rgba(243,240,232,.10); color:rgba(243,240,232,.78); margin-left:auto; }
+    .bot{ background:rgba(17,24,32,.48); border:1px solid rgba(79,189,181,.25); color:rgba(243,240,232,.75); }
+    .input{ height:44px; border:1px solid var(--line); border-radius:999px; display:flex; align-items:center; padding:0 14px; color:rgba(243,240,232,.45); font-size:12px; margin-top:14px; }
+
+    .list{ display:grid; gap:9px; }
+    .item{ border:1px solid var(--line); border-radius:16px; padding:12px; background:rgba(243,240,232,.04); }
+    .item b{ display:block; font-size:12px; margin-bottom:5px; }
+    .item span{ color:rgba(243,240,232,.56); font-size:11.5px; line-height:1.35; }
+
+    .footer-note{ padding:18px 28px; border-top:1px solid var(--line); color:rgba(243,240,232,.58); font-size:12px; display:flex; justify-content:space-between; gap:18px; flex-wrap:wrap; background:rgba(13,18,23,.36); }
+
+    @media (max-width:1250px){
+      .grid{ grid-template-columns:1fr; }
+      .side,.rail{ border:0; border-bottom:1px solid var(--line); }
+      .matrix{ grid-template-columns:repeat(2,1fr); }
+      .hero{ grid-template-columns:1fr; }
+    }
+    @media (max-width:720px){
+      .wrap{ padding:12px; }
+      .dashboard{ width:calc(100vw - 24px); border-radius:22px; }
+      .topbar{ height:auto; grid-template-columns:1fr; padding:18px; }
+      .main,.side,.rail{ padding:16px; }
+      .hero .big{ font-size:34px; }
+      .matrix,.lower,.touchgrid{ grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="lava">
+    <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="blob b4"></div>
+  </div>
+  <div class="wrap">
+    <main class="dashboard">
+      <header class="topbar">
+        <div class="brand">
+          <div class="mark">T1</div>
+          <div class="title">
+            <h1>TheOne Control Room — mapa visual desta semana</h1>
+            <p>Objetivo: transformar a ideia num cockpit local vivo, conversável e preparado para virar produto.</p>
+          </div>
+        </div>
+        <div class="chips">
+          <div class="chip">Estado: <strong>em construção</strong></div>
+          <div class="chip">Modo: <strong>local primeiro</strong></div>
+          <div class="chip">Milestone: <strong>primeira demo navegável</strong></div>
+        </div>
+      </header>
+
+      <section class="grid">
+        <aside class="side">
+          <div class="section-label">As 7 coisas gigantes</div>
+          <div class="mission">
+            <div class="small">Missão da semana</div>
+            <h2>Provar que isto não é dashboard genérico.</h2>
+            <p>Não vamos começar pela VPS. Vamos provar localmente a experiência: visual vivo, decisão clara, dados úteis e chatbot a comandar o cockpit.</p>
+          </div>
+          <div class="giants">
+            <div class="giant fire"><div class="num">1</div><div><h3>Fundação local</h3><p>Repo, app skeleton, Docker, health, seeds mínimos.</p><span class="tag"><i class="dot"></i> Fazer primeiro</span></div></div>
+            <div class="giant violet"><div class="num">2</div><div><h3>Living UI</h3><p>Lava lamp, cockpit, touchscreen zones, avatar/boneco.</p><span class="tag"><i class="dot"></i> Provar sensação</span></div></div>
+            <div class="giant blue"><div class="num">3</div><div><h3>Signal Engine</h3><p>Transforma eventos em AGORA, bloqueios, risco e paralelo.</p><span class="tag"><i class="dot"></i> Cérebro visual</span></div></div>
+            <div class="giant warn"><div class="num">4</div><div><h3>CRM / Booking Core</h3><p>Tenant, cliente, serviço, local, appointment/prebooking.</p><span class="tag"><i class="dot"></i> Valor real</span></div></div>
+            <div class="giant good"><div class="num">5</div><div><h3>Booking público</h3><p>/book/{slug}, escolha, confirmação, feedback claro.</p><span class="tag"><i class="dot"></i> Primeiro fluxo</span></div></div>
+            <div class="giant blue"><div class="num">6</div><div><h3>Chatbot do dashboard</h3><p>Pergunta, explica, filtra e muda a vista com ferramentas.</p><span class="tag"><i class="dot"></i> Conversável</span></div></div>
+            <div class="giant"><div class="num">7</div><div><h3>QA → VPS ready</h3><p>Testes, envs, logs, deploy path, sem secrets no repo.</p><span class="tag"><i class="dot"></i> Levar para Oracle</span></div></div>
+          </div>
+        </aside>
+
+        <section class="main">
+          <article class="hero">
+            <div>
+              <h2>Fazer agora</h2>
+              <div class="big">Construir a primeira tela viva com dados mockados.</div>
+              <div class="why">Motivo: antes de gastar energia em backend pesado ou VPS, precisamos validar que a interface realmente mostra o que importa e que o chatbot consegue conversar com o estado do dashboard.</div>
+            </div>
+            <div class="unlock">
+              <div class="unlock-card"><b>Desbloqueia</b><span>Decisão visual, direção premium, demo local, estrutura dos componentes e conversa com o cockpit.</span></div>
+              <div class="unlock-card"><b>Se ignorar</b><span>Corremos o risco de construir só mais um admin com cards e perder a ideia principal.</span></div>
+              <div class="unlock-card"><b>Paralelo seguro</b><span>Definir schema de eventos e modelos mínimos de tenant, serviço, local e booking.</span></div>
+            </div>
+          </article>
+
+          <div class="signal-strip">
+            <div class="marquee">
+              <span>AGORA: protótipo local vivo</span><span>BLOQUEADO: dados reais ainda não existem</span><span>PODE JÁ: UI, schema, mocks e chatbot tools</span><span>RISCO: virar admin genérico</span><span>META: primeira demo navegável esta semana</span>
+              <span>AGORA: protótipo local vivo</span><span>BLOQUEADO: dados reais ainda não existem</span><span>PODE JÁ: UI, schema, mocks e chatbot tools</span><span>RISCO: virar admin genérico</span><span>META: primeira demo navegável esta semana</span>
+            </div>
+          </div>
+
+          <div class="matrix">
+            <div class="lane fire"><div class="k">01 / base</div><h3>Local foundation</h3><p>Next.js + FastAPI + Docker Compose + health.</p><div class="bar"><i style="width:18%"></i></div></div>
+            <div class="lane violet"><div class="k">02 / interface</div><h3>Lava cockpit</h3><p>Fundo vivo, Signal Board, painel Broadway e modo touch.</p><div class="bar"><i style="width:25%"></i></div></div>
+            <div class="lane blue"><div class="k">03 / inteligência</div><h3>Signal Engine</h3><p>Eventos entram; prioridade, risco e próximo passo saem.</p><div class="bar"><i style="width:12%"></i></div></div>
+            <div class="lane warn"><div class="k">04 / domínio</div><h3>CRM seed</h3><p>Tenant, staff, serviço, local, cliente e slug demo.</p><div class="bar"><i style="width:10%"></i></div></div>
+            <div class="lane good"><div class="k">05 / valor</div><h3>Booking E2E</h3><p>Cliente escolhe horário e cria appointment/prebooking.</p><div class="bar"><i style="width:5%"></i></div></div>
+            <div class="lane blue"><div class="k">06 / conversa</div><h3>Chat tools</h3><p>O bot lê estado, explica bloqueios e muda a vista.</p><div class="bar"><i style="width:8%"></i></div></div>
+            <div class="lane"><div class="k">07 / saída</div><h3>QA + VPS path</h3><p>Build, smoke, seeds, env, deploy script e segurança.</p><div class="bar"><i style="width:7%"></i></div></div>
+          </div>
+
+          <div class="lower">
+            <div class="module">
+              <h3>Ritmo da semana</h3>
+              <div class="timeline">
+                <div class="step"><div class="day">Dia 1</div><div><b>Skeleton local</b><p>Repo com apps/dashboard, apps/api, docker-compose e dados mock.</p></div></div>
+                <div class="step"><div class="day">Dia 2</div><div><b>Primeira tela viva</b><p>Fundo animado, AGORA, 7 frentes e Broadway Signal Strip.</p></div></div>
+                <div class="step"><div class="day">Dia 3</div><div><b>Signal Engine v0</b><p>Mock events classificados em prioridade, bloqueio, risco, feito e paralelo.</p></div></div>
+                <div class="step"><div class="day">Dia 4</div><div><b>Modelo CRM/booking</b><p>Tenant, serviço, local, cliente, appointment e slug demo.</p></div></div>
+                <div class="step"><div class="day">Dia 5</div><div><b>Booking público mínimo</b><p>/book/demo com confirmação falsa ou real mínima, dependendo do backend.</p></div></div>
+                <div class="step"><div class="day">Dia 6</div><div><b>Chatbot de cockpit</b><p>Comandos: estado, bloqueios, próximos passos, modo foco e explicação.</p></div></div>
+                <div class="step"><div class="day">Dia 7</div><div><b>Demo + pacote VPS</b><p>Build local, smoke, README e plano limpo para Oracle Cloud.</p></div></div>
+              </div>
+            </div>
+            <div class="module">
+              <h3>Zonas touchscreen</h3>
+              <div class="touchgrid">
+                <div class="touch"><b>Foco</b><span>Mostra só AGORA + motivo.</span></div>
+                <div class="touch"><b>Bloqueios</b><span>O que impede avanço.</span></div>
+                <div class="touch"><b>Booking</b><span>Fluxo público e appointments.</span></div>
+                <div class="touch"><b>Assistant</b><span>Estado do chatbot e ferramentas.</span></div>
+                <div class="touch"><b>Feito</b><span>Progresso visível.</span></div>
+                <div class="touch"><b>Demo</b><span>Modo apresentação/TV.</span></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <aside class="rail">
+          <div class="chat">
+            <h3>Chatbot do cockpit</h3>
+            <div class="bubble user">Mostra-me só o que importa agora.</div>
+            <div class="bubble bot">Agora: primeira tela viva com dados mockados. Isto prova a experiência antes do backend pesado.</div>
+            <div class="bubble user">Porque é que booking está bloqueado?</div>
+            <div class="bubble bot">Falta seed: tenant, serviço, local e slug. Sem isso o link público não tem opções reais.</div>
+            <div class="bubble user">Ativa modo foco.</div>
+            <div class="bubble bot">Modo foco: escondi ruído. Mantive AGORA, 3 bloqueios e 1 risco principal.</div>
+            <div class="input">Fala com o TheOne...</div>
+          </div>
+
+          <div class="section-label">Bloqueios ativos</div>
+          <div class="list" style="margin-bottom:18px;">
+            <div class="item"><b>Dados reais ainda não existem</b><span>Começar com mocks; depois seed local.</span></div>
+            <div class="item"><b>Chatbot precisa de ferramentas</b><span>Sem tools, ele conversa mas não controla nada.</span></div>
+            <div class="item"><b>VPS ainda é cedo</b><span>Primeiro provar local; depois deploy.</span></div>
+          </div>
+
+          <div class="section-label">Riscos visíveis</div>
+          <div class="list">
+            <div class="item"><b>Virar admin genérico</b><span>Mitigação: Signal Board domina; cards não mandam.</span></div>
+            <div class="item"><b>Polish antes do núcleo</b><span>Mitigação: visual vivo só onde prova decisão.</span></div>
+            <div class="item"><b>Chatbot inventar estado</b><span>Mitigação: respostas operacionais só via tools.</span></div>
+          </div>
+        </aside>
+      </section>
+
+      <footer class="footer-note">
+        <span>Regra de produto: uma tela = uma decisão principal. Um bloco = uma pergunta. Uma linha = uma ideia.</span>
+        <span>Este mapa é uma maquete de direção, não a implementação final.</span>
+      </footer>
+    </main>
+  </div>
+</body>
+</html>
