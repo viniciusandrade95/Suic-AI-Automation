@@ -206,18 +206,42 @@ feliz
 focado
 ```
 
-### 5. Timeline inferior
+### 5. Ritmo horizontal da semana
 
-Linha de avanço da semana:
+A linha inferior deve funcionar como uma faixa horizontal, com 7 blocos lado a lado.
+
+Cada dia tem:
 
 ```text
-Dia 1: base + layout
-Dia 2: signal engine
-Dia 3: tenant/auth
-Dia 4: CRM seed
-Dia 5: prebooking
-Dia 6: chatbot controla painéis
-Dia 7: touch review + preparação VPS
+Dia
+tema principal
+3 tarefas concretas
+resultado esperado
+```
+
+Não é uma lista vertical escondida. É uma régua visual da semana inteira, para o operador perceber o ritmo sem abrir outro documento.
+
+Modelo:
+
+| Dia | Tema | Bloco de tarefas | Resultado esperado |
+| --- | --- | --- | --- |
+| Dia 1 | Skeleton local | repo base; dev stack mínima; dados mock | ambiente local abre com tela estruturada |
+| Dia 2 | Primeira tela viva | AGORA central; 7 frentes; Broadway strip | cockpit reconhecível e demonstrável |
+| Dia 3 | Signal Engine v0 | eventos mock; classificador; explicação curta | dashboard decide o que sobe para o centro |
+| Dia 4 | CRM / booking model | tenant demo; serviço + local; cliente demo | estado deixa de depender só de texto mockado |
+| Dia 5 | Booking público mínimo | `/book/demo`; confirmação; evento no cockpit | fluxo público altera o estado visual |
+| Dia 6 | Chatbot do cockpit | tool de estado; tool de foco; comandos naturais | operador conversa com o dashboard |
+| Dia 7 | Demo + pacote VPS | smoke local; README de execução; plano VPS | MVP local demonstrável e próximo deploy decidido |
+
+Formato visual esperado:
+
+```text
+┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐
+│ Dia 1  │ │ Dia 2  │ │ Dia 3  │ │ Dia 4  │ │ Dia 5  │ │ Dia 6  │ │ Dia 7  │
+│ tarefa │ │ tarefa │ │ tarefa │ │ tarefa │ │ tarefa │ │ tarefa │ │ tarefa │
+│ tarefa │ │ tarefa │ │ tarefa │ │ tarefa │ │ tarefa │ │ tarefa │ │ tarefa │
+│ feito  │ │ feito  │ │ feito  │ │ feito  │ │ feito  │ │ feito  │ │ feito  │
+└────────┘ └────────┘ └────────┘ └────────┘ └────────┘ └────────┘ └────────┘
 ```
 
 ## Regra principal
